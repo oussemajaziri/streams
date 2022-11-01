@@ -77,7 +77,7 @@ public class PersonController {
     public void getPersonsList(){
         List<Person> listPerson = personService.getAllPersons();
         LocalTime time = LocalTime.now();
-        String pathFile = "C:\\Users\\ojaziri\\Desktop\\NOUVAUTES\\list"+time.getHour()+"h-"+time.getMinute()+"m-"+time.getSecond()+"s"+".txt";
+        var pathFile = "C:\\Users\\ojaziri\\Desktop\\NOUVAUTES\\list"+time.getHour()+"h-"+time.getMinute()+"m-"+time.getSecond()+"s"+".txt";
         Path filePath= Paths.get(pathFile); 
         List<String> listName = listPerson.stream().map(Person::getFirstName).collect(Collectors.toList());
         try {
