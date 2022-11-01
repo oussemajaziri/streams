@@ -1,6 +1,12 @@
 package com.jaz.streams.controllers;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,15 +35,16 @@ public class PersonController {
     }
 	
 	
+	@GetMapping("")
+    public List<Person> getAllPersons(){
+        return personService.getAllPersons();
+    }
+	
 	@GetMapping("/{id}")
     public Optional<Person> getPerson(@PathVariable Long id){
         return personService.getPersonById(id);
     }
 	
-	@GetMapping("")
-    public List<Person> getAllPersons(){
-        return personService.getAllPersons();
-    }
 	
 	@GetMapping("/child/{age}")
     public boolean verifChildExistence(@PathVariable int age){
@@ -61,5 +68,25 @@ public class PersonController {
     public long getNumberOfPerson(){
         List<Person> personList =  personService.getAllPersons();
         return personList.stream().count();
+    }
+	
+	
+	private String namesList = "" ;
+
+	@GetMapping("/list")
+    public void getPersonsList(){
+        List<Person> listPerson = personService.getAllPersons();
+        LocalTime time = LocalTime.now();
+        String pathFile = "C:\\Users\\ojaziri\\Desktop\\NOUVAUTES\\list"+time.getHour()+"h-"+time.getMinute()+"m-"+time.getSecond()+"s"+".txt";
+        Path filePath= Paths.get(pathFile); 
+        List<String> listName = listPerson.stream().map(Person::getFirstName).collect(Collectors.toList());
+        try {
+        	listName.forEach(nom->namesList=namesList.concat(nom)+"\n");
+            Files.writeString(filePath, namesList,StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+        	namesList = "";
+		}
     }
 }
